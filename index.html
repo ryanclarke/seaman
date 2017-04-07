@@ -5,21 +5,38 @@
     <meta charset="UTF-8">
     <title>Seaman</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://unpkg.com/purecss@0.6.2/build/pure-min.css" integrity="sha384-UQiGfs9ICog+LwheBSRCt1o5cbyKIHbwjWscjemyBMT9YCUMZffs6UqUTd0hObXD"
+
+    <!-- Twitter Bootstrap v3.3.7-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
         crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp"
+        crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+        crossorigin="anonymous"></script>
+
     <link rel="stylesheet" href="custom.css">
 </head>
 
 <body>
-    <div id="fps"></div>
-    <div id="number"></div>
-    <button id="dig">Dig</button>
-    <p id="log"></p>
-
-    <div id="wrapper" class="pure-g">
-        <div class="pure-u-1-3"></div>
-        <div class="pure-u-1-3"></div>
-        <div class="pure-u-1-3"></div>
+    <div id="wrapper" class="row">
+        <div class="col-md-4">
+            <div id="fps"></div>
+        </div>
+        <div class="col-md-4">
+            <h1>The Dirtpile</h1>
+            <div id="dig-label">Dig</div>
+            <div id="dig" class="progress">
+                <div id="dig-bar" class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">
+                    Dig
+                </div>
+                <span id='dig-time'></span>
+            </div>
+            <ul id="log" class="list-unstyled"></ul>
+        </div>
+        <div class="col-md-4">
+            <h1>My Backpack</h1>
+            <ul id="backpack" class="list-unstyled"></ul>
+        </div>
     </div>
 
     <script src="js/mainloop.js"></script>
