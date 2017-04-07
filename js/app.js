@@ -7,67 +7,59 @@
         {
             action: 'dig',
             count: 0,
+            specialCount: 0,
             title: "Digging",
             duration: 2000,
             results: [
                 {
+                    weight: 50,
                     msg: "Dug in the dirt",
                     item: null,
                     value: 0
                 },
                 {
+                    weight: 10,
                     msg: "Dug up a brick",
                     item: "brick",
-                    value: 1
+                    value: 5
                 },
                 {
-                    msg: "Dug up a log",
-                    item: "log",
-                    value: 1
-                },
-                {
+                    weight: 5,
                     msg: "Dug up a old hat",
                     item: "old hat",
-                    value: 1
+                    value: 10
                 },
                 {
+                    weight: 20,
                     msg: "Dug up a rock",
                     item: "rock",
                     value: 1
                 },
                 {
+                    weight: 15,
                     msg: "Dug up a twig",
                     item: "twig",
-                    value: 1
+                    value: 2
                 },
             ],
+            pickRandomResult: function () {
+                var sumOfWeights = this.results.reduce(function (accumulator, result) {
+                    return accumulator + result.weight;
+                }, 0);
+                var roll = Math.floor(Math.random() * sumOfWeights);
+                var cumulativeWeight = 0;
+                return this.results.find(function (result) {
+                    cumulativeWeight += result.weight;
+                    return roll < cumulativeWeight;
+                });
+            },
             getResult: function () {
                 this.count += 1;
-                var text = '';
-                var status = '';
-                var item = null;
-                if (Math.floor(Math.random() * 2) == 0) {
-                    var items = this.results.filter(function(r){
-                        return r.value > 0;
-                    });
-                    var index = Math.floor(Math.random() * items.length);
-                    var result = items[index];
-                    item = result.item;
-                    text = '<strong>' + result.msg + '</strong>';
-                    status = 'success';
+                if (this.count <= 3) {
+                    return this.results[0];
                 }
-                if (text === '' || this.count <= 3) {
-                    item = null;
-                    text = this.results[0].msg;
-                    status = 'muted';
-                }
-                if (item !== null) {
-                    state.backpack.store(item);
-                }
-                return {
-                    text: text,
-                    status: status
-                };
+
+                return this.pickRandomResult();
             }
         },
     ];
@@ -76,8 +68,10 @@
             messages: [],
             draw: function () {
                 var items = '';
-                this.messages.forEach(function (msg) {
-                    items += '<li class="text-' + msg.status + '">' + msg.text + '</li>';
+                this.messages.forEach(function (result) {
+                    var text = result.value > 0 ? '<strong>'+result.msg+'</strong>' : result.msg;
+                    var status = result.value > 0 ? 'success' : 'muted';
+                    items += '<li class="text-' + status + '">' + text + '</li>';
                 }, this);
                 id('log').innerHTML = items;
             }
@@ -123,6 +117,7 @@
                 if (this.isInProgress()) {
                     id('work-label').textContent = this.job.title;
                     id('work-bar').style.width = (100 * this.left / this.job.duration) + '%';
+                    id('work-time').textContent = Math.floor(this.left / 1000 + 1) + 's';
                 }
                 if (this.justFinished) {
                     this.justFinished = false;
@@ -130,7 +125,11 @@
                     id('work-bar').style.width = '0%';
                     id('work-time').textContent = '';
 
-                    state.log.messages.push(this.job.getResult());
+                    var result = this.job.getResult();
+                    state.log.messages.push(result);
+                    if (result.item) {
+                        state.backpack.store(result.item)
+                    }
                     this.job = null;
                 }
             }
