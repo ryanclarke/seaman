@@ -69,7 +69,7 @@
             messages: [],
             draw: function () {
                 id('log').innerHTML = this.messages.map(function (result) {
-                    var text = result.value > 0 ? '<strong>'+result.msg+'</strong>' : result.msg;
+                    var text = result.value > 0 ? '<strong>' + result.msg + '</strong>' : result.msg;
                     var status = result.value > 0 ? 'success' : 'muted';
                     return '<li class="text-' + status + '">' + text + '</li>';
                 }, this).join('\n');
@@ -165,15 +165,10 @@
         }
         while (events.length > 0 && !state.work.isInProgress()) {
             var event = events.shift();
-            switch (event) {
-                case 'dig':
-                    state.work.activate(jobs.find(function (job) {
-                        return job.action === event;
-                    }, this));
-                    break;
-
-                default:
-                    break;
+            if (event) {
+                state.work.activate(jobs.find(function (job) {
+                    return job.action === event;
+                }, this));
             }
         }
     }
