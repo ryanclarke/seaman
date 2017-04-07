@@ -18,28 +18,78 @@
 </head>
 
 <body>
-    <div id="wrapper" class="row">
-        <div class="col-md-1">
-            <div id="fps"></div>
-        </div>
-        <div class="col-md-3">
-            <h2>Actions</h2>
-            <button id="dig-action" class="btn btn-primary">
-                <img src="svg/spade.svg" class="img-responsive"> Dig
-            </button>
-        </div>
-        <div class="col-md-4">
-            <h2>The Dirtpile</h2>
-            <div id="work-label">Doing Nothing</div>
-            <div id="work" class="progress">
-                <div id="work-bar" class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>
-                <span id='work-time'></span>
+    <div id="fps"></div>
+    <div id="wrapper" class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h6>&nbsp;</h6>
             </div>
-            <ul id="log" class="list-unstyled"></ul>
         </div>
-        <div class="col-md-4">
-            <h2>My Backpack</h2>
-            <table id="backpack" class="table table-hover"></table>
+        <div class="row">
+            <div class="col-md-3">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <div class="media panel-title">
+                            <div class="media-left media-center">
+                                <img src="svg/click.svg" class="media-object" style="width: 2em;">
+                            </div>
+                            <div class="media-body">
+                                <h2 class="media-heading">Actions</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <button id="dig-action" class="btn"><img src="svg/spade.svg" class="img-responsive"> Dig</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-5">
+                <div class="panel panel-success">
+                    <div class="panel-heading">
+                        <div class="media panel-title">
+                            <div class="media-left media-center">
+                                <img src="svg/swamp.svg" class="media-object" style="width: 2em;">
+                            </div>
+                            <div class="media-body">
+                                <h2 class="media-heading">Outdoors</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div id="work-label">Doing Nothing</div>
+                        <div id="work" class="progress">
+                            <div id="work-bar" class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0"
+                                aria-valuemax="100" style="width: 0%;"></div>
+                            <span id='work-time'></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <div class="media panel-title">Log</div>
+                    </div>
+                    <div class="panel-body">
+                        <ul id="log" class="list-unstyled"></ul>
+                        </div>
+                    </div>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <div class="media panel-title">
+                            <div class="media-left media-center">
+                                <img src="svg/backpack.svg" class="media-object" style="width: 2em;">
+                            </div>
+                            <div class="media-body">
+                                <h2 class="media-heading">Backpack</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <table id="backpack" class="table table-hover"></table>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
