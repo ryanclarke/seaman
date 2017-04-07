@@ -24,11 +24,21 @@
             svg: 'stone-pile',
             value: 1
         },
+        string: {
+            name: 'string',
+            svg: 'whiplash',
+            value: 3
+        },
         twig: {
             name: 'twig',
             svg: 'tree-branch',
             value: 2
         },
+        worm: {
+            name: 'worm',
+            svg: 'earth-worm',
+            value: 1
+        }
     };
     var jobs = [
         {
@@ -39,7 +49,7 @@
             duration: 2000,
             results: [
                 {
-                    weight: 0,
+                    weight: 50,
                     msg: 'Dug in the dirt',
                     item: null,
                     value: 0
@@ -51,23 +61,33 @@
                 },
                 {
                     weight: 4,
-                    msg: 'Dug up a old hat',
+                    msg: 'Dug up an old hat',
                     item: items.oldHat
                 },
                 {
                     weight: 1,
-                    msg: 'Dug up a old pirate hat',
-                    item: items.pirateHat
+                    msg: 'Dug up an old pirate hat',
+                    item: items.pirateHat,
                 },
                 {
-                    weight: 20,
+                    weight: 15,
                     msg: 'Dug up a rock',
                     item: items.rock
                 },
                 {
-                    weight: 15,
+                    weight: 10,
+                    msg: 'Dug up a piece of string',
+                    item: items.string
+                },
+                {
+                    weight: 10,
                     msg: 'Dug up a twig',
                     item: items.twig
+                },
+                {
+                    weight: 15,
+                    msg: 'Dug up a wiggly worm',
+                    item: items.worm
                 },
             ],
             pickRandomResult: function () {
@@ -195,12 +215,14 @@
         return Intl.NumberFormat('en-US', { minimumFractionDigits: digits, maximumFractionDigits: digits }).format(d);
     }
 
+    var idleDelay = 5000;
     function begin(timestamp) {
         if (state.work.isInProgress()) {
             state.lastActionTime = timestamp;
             events = [];
         }
-        if (events.length === 0 && timestamp - state.lastActionTime > 10000) {
+        if (events.length === 0 && timestamp - state.lastActionTime > idleDelay) {
+            idleDelay *= 2;
             state.lastActionTime = timestamp;
             state.log.store({
                 msg: "Doing nothing",
@@ -208,6 +230,7 @@
             });
         }
         while (events.length > 0 && !state.work.isInProgress()) {
+            idleDelay = 10000;
             var event = events.shift();
             if (event) {
                 state.work.activate(jobs.find(function (job) {
@@ -244,5 +267,12 @@
         events.push('dig');
     });
     id('work-bar').style.transition = 'width 0s ease 0s';
+
+    id('fps').addEventListener('click', function() {
+        Object.values(items).map(function (item) {
+            state.backpack.store(item);
+        }, this);
+        id('fps').removeEventListener('click');
+    })
 })();
 
