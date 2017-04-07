@@ -3,43 +3,71 @@
     'use strict';
 
     var events = [];
+    var items = {
+        brick: {
+            name: 'brick',
+            svg: 'brick-pile',
+            value: 5
+        },
+        oldHat: {
+            name: 'old hat',
+            svg: 'fedora',
+            value: 10
+        },
+        pirateHat: {
+            name: 'pirate hat',
+            svg: 'pirate-hat',
+            value: 25
+        },
+        rock: {
+            name: 'rock',
+            svg: 'stone-pile',
+            value: 1
+        },
+        twig: {
+            name: 'twig',
+            svg: 'tree-branch',
+            value: 2
+        },
+    };
     var jobs = [
         {
             action: 'dig',
             count: 0,
             specialCount: 0,
-            title: "Digging",
+            title: 'Digging',
             duration: 2000,
             results: [
                 {
-                    weight: 50,
-                    msg: "Dug in the dirt",
+                    weight: 0,
+                    msg: 'Dug in the dirt',
                     item: null,
                     value: 0
                 },
                 {
                     weight: 10,
-                    msg: "Dug up a brick",
-                    item: "brick",
-                    value: 5
+                    msg: 'Dug up a brick',
+                    item: items.brick
                 },
                 {
-                    weight: 5,
-                    msg: "Dug up a old hat",
-                    item: "old hat",
-                    value: 10
+                    weight: 4,
+                    msg: 'Dug up a old hat',
+                    item: items.oldHat
+                },
+                {
+                    weight: 1,
+                    msg: 'Dug up a old pirate hat',
+                    item: items.pirateHat
                 },
                 {
                     weight: 20,
-                    msg: "Dug up a rock",
-                    item: "rock",
-                    value: 1
+                    msg: 'Dug up a rock',
+                    item: items.rock
                 },
                 {
                     weight: 15,
-                    msg: "Dug up a twig",
-                    item: "twig",
-                    value: 2
+                    msg: 'Dug up a twig',
+                    item: items.twig
                 },
             ],
             pickRandomResult: function () {
@@ -76,8 +104,8 @@
                 if (this.dirty) {
                     this.dirty = false;
                     id('log').innerHTML = this.messages.map(function (result) {
-                        var text = result.value > 0 ? '<strong>' + result.msg + '</strong>' : result.msg;
-                        var status = result.value > 0 ? 'success' : 'muted';
+                        var text = result.item && result.item.value > 0 ? '<strong>' + result.msg + '</strong>' : result.msg;
+                        var status = result.item && result.item.value > 0 ? 'success' : 'muted';
                         return '<li class="text-' + status + '">' + text + '</li>';
                     }, this).join('\n');
                 }
@@ -86,21 +114,22 @@
         backpack: {
             dirty: false,
             things: {},
-            store: function (label) {
-                if (!this.things[label]) {
-                    this.things[label] = 0;
+            store: function (thing) {
+                if (!this.things[thing.name]) {
+                    this.things[thing.name] = thing;
+                    thing.count = 0;
                 }
-                this.things[label] += 1;
+                thing.count += 1;
                 this.dirty = true;
             },
             draw: function () {
                 if (this.dirty) {
                     this.dirty = false;
-                    var tableRows = Object.keys(this.things).sort().map(function (thing) {
-                        return '<tr><td>' + thing + '</td><td>' + this.things[thing] + '</td></tr>';
+                    var tableRows = Object.values(this.things).map(function (thing) {
+                        return '<tr><td><img class="img-responsive" src="svg/' + thing.svg + '.svg"></td><td>' + thing.name + '</td><td>' + thing.count + '</td></tr>';
                     }, this);
                     if (tableRows.length > 0) {
-                        tableRows.unshift('<tr><th>Item</th><th>Amount</th><tr>');
+                        tableRows.unshift('<tr><th></th><th>Item</th><th>Amount</th><tr>');
                     }
                     id('backpack').innerHTML = tableRows.join('\n');
                 }
