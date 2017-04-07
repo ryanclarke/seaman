@@ -9,16 +9,6 @@
             svg: 'brick-pile',
             value: 5
         },
-        oldHat: {
-            name: 'old hat',
-            svg: 'fedora',
-            value: 10
-        },
-        pirateHat: {
-            name: 'pirate hat',
-            svg: 'pirate-hat',
-            value: 25
-        },
         rock: {
             name: 'rock',
             svg: 'stone-pile',
@@ -38,7 +28,32 @@
             name: 'worm',
             svg: 'earth-worm',
             value: 1
-        }
+        },
+        oldHat: {
+            name: 'old hat',
+            svg: 'fedora',
+            value: 10
+        },
+        pirateHat: {
+            name: 'pirate hat',
+            svg: 'pirate-hat',
+            value: 25
+        },
+        topHat: {
+            name: 'top hat',
+            svg: 'top-hat',
+            value: 25
+        },
+        cowboyHat: {
+            name: 'cowboy hat',
+            svg: 'top-hat',
+            value: 25
+        },
+        sombrero: {
+            name: 'sombrero',
+            svg: 'sombrero',
+            value: 25
+        },
     };
     var jobs = [
         {
@@ -68,6 +83,21 @@
                     weight: 1,
                     msg: 'Dug up an old pirate hat',
                     item: items.pirateHat,
+                },
+                {
+                    weight: 1,
+                    msg: 'Dug up an old top hat',
+                    item: items.topHat,
+                },
+                {
+                    weight: 1,
+                    msg: 'Dug up an old cowboy hat',
+                    item: items.cowboyHat,
+                },
+                {
+                    weight: 1,
+                    msg: 'Dug up an old sombrero',
+                    item: items.sombrero,
                 },
                 {
                     weight: 15,
@@ -272,7 +302,6 @@
         Object.values(items).map(function (item) {
             state.backpack.store(item);
         }, this);
-        id('fps').removeEventListener('click');
     })
 })();
 
