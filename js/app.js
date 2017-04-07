@@ -55,7 +55,7 @@
             },
             getResult: function () {
                 this.count += 1;
-                if (this.count <= 3) {
+                if (this.count <= 2) {
                     return this.results[0];
                 }
 
@@ -66,29 +66,44 @@
     var state = {
         lastActionTime: -99999,
         log: {
+            dirty: false,
             messages: [],
+            store: function (message) {
+                this.messages.unshift(message);
+                this.dirty = true;
+            },
             draw: function () {
-                id('log').innerHTML = this.messages.map(function (result) {
-                    var text = result.value > 0 ? '<strong>' + result.msg + '</strong>' : result.msg;
-                    var status = result.value > 0 ? 'success' : 'muted';
-                    return '<li class="text-' + status + '">' + text + '</li>';
-                }, this).join('\n');
+                if (this.dirty) {
+                    this.dirty = false;
+                    id('log').innerHTML = this.messages.map(function (result) {
+                        var text = result.value > 0 ? '<strong>' + result.msg + '</strong>' : result.msg;
+                        var status = result.value > 0 ? 'success' : 'muted';
+                        return '<li class="text-' + status + '">' + text + '</li>';
+                    }, this).join('\n');
+                }
             }
         },
         backpack: {
+            dirty: false,
             things: {},
             store: function (label) {
                 if (!this.things[label]) {
                     this.things[label] = 0;
                 }
                 this.things[label] += 1;
+                this.dirty = true;
             },
             draw: function () {
-                var items = '';
-                Object.keys(this.things).sort().forEach(function (thing) {
-                    items += '<li>' + thing + ': ' + this.things[thing] + '</li>';
-                }, this);
-                id('backpack').innerHTML = items;
+                if (this.dirty) {
+                    this.dirty = false;
+                    var tableRows = Object.keys(this.things).sort().map(function (thing) {
+                        return '<tr><td>' + thing + '</td><td>' + this.things[thing] + '</td></tr>';
+                    }, this);
+                    if (tableRows.length > 0) {
+                        tableRows.unshift('<tr><th>Item</th><th>Amount</th><tr>');
+                    }
+                    id('backpack').innerHTML = tableRows.join('\n');
+                }
             }
         },
         work: {
@@ -125,7 +140,7 @@
                     id('work-time').textContent = '';
 
                     var result = this.job.getResult();
-                    state.log.messages.unshift(result);
+                    state.log.store(result);
                     if (result.item) {
                         state.backpack.store(result.item)
                     }
@@ -158,7 +173,7 @@
         }
         if (events.length === 0 && timestamp - state.lastActionTime > 10000) {
             state.lastActionTime = timestamp;
-            state.log.messages.unshift({
+            state.log.store({
                 msg: "Doing nothing",
                 value: 0,
             });
