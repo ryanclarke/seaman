@@ -64,16 +64,15 @@
         },
     ];
     var state = {
+        lastActionTime: -99999,
         log: {
             messages: [],
             draw: function () {
-                var items = '';
-                this.messages.forEach(function (result) {
+                id('log').innerHTML = this.messages.map(function (result) {
                     var text = result.value > 0 ? '<strong>'+result.msg+'</strong>' : result.msg;
                     var status = result.value > 0 ? 'success' : 'muted';
-                    items += '<li class="text-' + status + '">' + text + '</li>';
-                }, this);
-                id('log').innerHTML = items;
+                    return '<li class="text-' + status + '">' + text + '</li>';
+                }, this).join('\n');
             }
         },
         backpack: {
@@ -126,7 +125,7 @@
                     id('work-time').textContent = '';
 
                     var result = this.job.getResult();
-                    state.log.messages.push(result);
+                    state.log.messages.unshift(result);
                     if (result.item) {
                         state.backpack.store(result.item)
                     }
@@ -152,16 +151,25 @@
         return Intl.NumberFormat('en-US', { minimumFractionDigits: digits, maximumFractionDigits: digits }).format(d);
     }
 
-    function begin() {
-        while (events.length > 0) {
+    function begin(timestamp) {
+        if (state.work.isInProgress()) {
+            state.lastActionTime = timestamp;
+            events = [];
+        }
+        if (events.length === 0 && timestamp - state.lastActionTime > 10000) {
+            state.lastActionTime = timestamp;
+            state.log.messages.unshift({
+                msg: "Doing nothing",
+                value: 0,
+            });
+        }
+        while (events.length > 0 && !state.work.isInProgress()) {
             var event = events.shift();
             switch (event) {
                 case 'dig':
-                    if (!state.work.isInProgress()) {
-                        state.work.activate(jobs.find(function (job) {
-                            return job.action === event;
-                        }, this));
-                    }
+                    state.work.activate(jobs.find(function (job) {
+                        return job.action === event;
+                    }, this));
                     break;
 
                 default:
