@@ -19,22 +19,24 @@
 
 <body>
     <div id="wrapper" class="row">
-        <div class="col-md-4">
+        <div class="col-md-1">
             <div id="fps"></div>
         </div>
+        <div class="col-md-3">
+            <h2>Actions</h2>
+            <button id="dig-action" class="btn btn-primary">Dig</button>
+        </div>
         <div class="col-md-4">
-            <h1>The Dirtpile</h1>
-            <div id="dig-label">Dig</div>
-            <div id="dig" class="progress">
-                <div id="dig-bar" class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">
-                    Dig
-                </div>
-                <span id='dig-time'></span>
+            <h2>The Dirtpile</h2>
+            <div id="work-label">Doing Nothing</div>
+            <div id="work" class="progress">
+                <div id="work-bar" class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>
+                <span id='work-time'></span>
             </div>
             <ul id="log" class="list-unstyled"></ul>
         </div>
         <div class="col-md-4">
-            <h1>My Backpack</h1>
+            <h2>My Backpack</h2>
             <ul id="backpack" class="list-unstyled"></ul>
         </div>
     </div>

@@ -3,6 +3,74 @@
     'use strict';
 
     var events = [];
+    var jobs = [
+        {
+            action: 'dig',
+            count: 0,
+            title: "Digging",
+            duration: 2000,
+            results: [
+                {
+                    msg: "Dug in the dirt",
+                    item: null,
+                    value: 0
+                },
+                {
+                    msg: "Dug up a brick",
+                    item: "brick",
+                    value: 1
+                },
+                {
+                    msg: "Dug up a log",
+                    item: "log",
+                    value: 1
+                },
+                {
+                    msg: "Dug up a old hat",
+                    item: "old hat",
+                    value: 1
+                },
+                {
+                    msg: "Dug up a rock",
+                    item: "rock",
+                    value: 1
+                },
+                {
+                    msg: "Dug up a twig",
+                    item: "twig",
+                    value: 1
+                },
+            ],
+            getResult: function () {
+                this.count += 1;
+                var text = '';
+                var status = '';
+                var item = null;
+                if (Math.floor(Math.random() * 2) == 0) {
+                    var items = this.results.filter(function(r){
+                        return r.value > 0;
+                    });
+                    var index = Math.floor(Math.random() * items.length);
+                    var result = items[index];
+                    item = result.item;
+                    text = '<strong>' + result.msg + '</strong>';
+                    status = 'success';
+                }
+                if (text === '' || this.count <= 3) {
+                    item = null;
+                    text = this.results[0].msg;
+                    status = 'muted';
+                }
+                if (item !== null) {
+                    state.backpack.store(item);
+                }
+                return {
+                    text: text,
+                    status: status
+                };
+            }
+        },
+    ];
     var state = {
         log: {
             messages: [],
@@ -16,8 +84,8 @@
         },
         backpack: {
             things: {},
-            store: function(label) {
-                if (!this.things[label]){
+            store: function (label) {
+                if (!this.things[label]) {
                     this.things[label] = 0;
                 }
                 this.things[label] += 1;
@@ -30,12 +98,13 @@
                 id('backpack').innerHTML = items;
             }
         },
-        dig: {
+        work: {
             left: 0,
-            duration: 2000,
+            job: null,
             justFinished: false,
-            activate: function () {
-                this.left = this.duration;
+            activate: function (newJob) {
+                this.job = newJob;
+                this.left = this.job.duration;
             },
             isInProgress: function () {
                 return this.left > 0;
@@ -50,52 +119,27 @@
                 }
             },
             draw: function () {
-                id('dig').disabled = this.isInProgress();
+                id('work').disabled = this.isInProgress();
                 if (this.isInProgress()) {
-                    id('dig-label').textContent = 'Digging';
-                    id('dig-bar').style.width = (100 * this.left / this.duration) + '%';
-                    id('dig-bar').classList.add('progress-bar-striped');
-                    id('dig-bar').textContent = '';
-                    id('dig-time').textContent = ' ' + num((1 + this.left) / 1000, 0) + 's';
+                    id('work-label').textContent = this.job.title;
+                    id('work-bar').style.width = (100 * this.left / this.job.duration) + '%';
                 }
                 if (this.justFinished) {
                     this.justFinished = false;
-                    id('dig-label').textContent = 'Dig';
-                    id('dig-bar').style.width = '100%';
-                    id('dig-bar').classList.remove('progress-bar-striped');
-                    id('dig-bar').textContent = 'Dig';
-                    var text = '';
-                    var status = '';
-                    if (Math.floor(Math.random() * 0) == 0) {
-                        var messages = [
-                            'rock',
-                            'log',
-                            'twig',
-                            'old hat',
-                            'brick',
-                            ''
-                        ];
-                        var index = Math.floor(Math.random() * (messages.length - 1));
-                        state.backpack.store(messages[index]);
-                        text = '<strong>Dug up a ' + messages[index] + '</strong>';
-                        status = 'success';
-                    }
-                    if (text === '') {
-                        text = 'Dug in the dirt';
-                        status = 'muted';
-                    }
-                    state.log.messages.push({
-                        text: text,
-                        status: status
-                    });
+                    id('work-label').textContent = 'Doing Nothing';
+                    id('work-bar').style.width = '0%';
+                    id('work-time').textContent = '';
+
+                    state.log.messages.push(this.job.getResult());
+                    this.job = null;
                 }
             }
         },
         update: function (delta) {
-            this.dig.update(delta);
+            this.work.update(delta);
         },
         draw: function () {
-            this.dig.draw();
+            this.work.draw();
             this.backpack.draw();
             this.log.draw();
         },
@@ -114,8 +158,10 @@
             var event = events.shift();
             switch (event) {
                 case 'dig':
-                    if (!state.dig.isInProgress()) {
-                        state.dig.activate()
+                    if (!state.work.isInProgress()) {
+                        state.work.activate(jobs.find(function (job) {
+                            return job.action === event;
+                        }, this));
                     }
                     break;
 
@@ -148,9 +194,9 @@
 
     MainLoop.setBegin(begin).setUpdate(update).setDraw(draw).setEnd(end).start();
 
-    id('dig').addEventListener('click', function () {
+    id('dig-action').addEventListener('click', function () {
         events.push('dig');
     });
-    id('dig-bar').style.transition = 'width 0s ease 0s';
+    id('work-bar').style.transition = 'width 0s ease 0s';
 })();
 
