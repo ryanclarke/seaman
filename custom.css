@@ -8,3 +8,9 @@
     background-size: 2em;
     padding-left: 2em;
 }
+
+.panel-title {
+    background-position: left;
+    background-repeat: no-repeat;
+    padding-left: 1.6em;
+}
