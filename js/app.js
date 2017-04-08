@@ -55,9 +55,31 @@
             value: 25
         },
     };
+    function rand(choices) {
+        return choices[Math.floor(Math.random() * choices.length)];
+    }
     var jobs = [
         {
-            action: 'dig',
+            action: 'daydream-action',
+            duration: 10000,
+            title: 'Daydreaming',
+            results: [
+                'Saw a cloud that looked like a sheep',
+                'Saw a cloud that like a wee little lamb',
+                'Thought about owning a pony',
+                'Heard a sound like a sleeping baby',
+                'Picked some flowers',
+                'Pretended to see a real princess',
+                'Twirled around and around',
+            ],
+            getResult: function () {
+                return {
+                    msg: rand(this.results)
+                }
+            }
+        },
+        {
+            action: 'dig-action',
             count: 0,
             specialCount: 0,
             title: 'Digging',
@@ -190,8 +212,10 @@
             job: null,
             justFinished: false,
             activate: function (newJob) {
-                this.job = newJob;
-                this.left = this.job.duration;
+                if (!this.isInProgress()) {
+                    this.job = newJob;
+                    this.left = this.job.duration;
+                }
             },
             isInProgress: function () {
                 return this.left > 0;
@@ -208,15 +232,23 @@
             draw: function () {
                 id('work').disabled = this.isInProgress();
                 if (this.isInProgress()) {
+                    var percent = 100 * this.left / this.job.duration;
                     id('work-label').textContent = this.job.title;
-                    id('work-bar').style.width = (100 * this.left / this.job.duration) + '%';
-                    id('work-time').textContent = Math.floor(this.left / 1000 + 1) + 's';
+                    id('work-bar').style.width = percent + '%';
+                    if (percent > 90) {
+                        id('work-time-in').textContent = Math.floor(this.left / 1000 + 1) + 's';
+                        id('work-time-out').textContent = '';
+                    } else {
+                        id('work-time-in').textContent = '';
+                        id('work-time-out').textContent = Math.floor(this.left / 1000 + 1) + 's';
+                    }
                 }
                 if (this.justFinished) {
                     this.justFinished = false;
                     id('work-label').textContent = 'Doing Nothing';
                     id('work-bar').style.width = '0%';
-                    id('work-time').textContent = '';
+                    id('work-time-in').textContent = '';
+                    id('work-time-out').textContent = '';
 
                     var result = this.job.getResult();
                     state.log.store(result);
@@ -271,7 +303,11 @@
     }
 
     function update(delta) {
-        state.update(delta)
+        state.update(delta);
+        var inventory = state.backpack.things;
+        if (inventory.twig && inventory.string) {
+            // id('action').innerHTML += '<button id="dig-action" class="btn"><img src="svg/spade.svg" class="img-responsive"> Dig</button>'
+        }
     }
 
     function draw() {
@@ -293,15 +329,21 @@
 
     MainLoop.setBegin(begin).setUpdate(update).setDraw(draw).setEnd(end).start();
 
-    id('dig-action').addEventListener('click', function () {
-        events.push('dig');
+    id('actions').addEventListener('click', function (event) {
+        if (event && event.target) {
+            var job = jobs.find(function (job) {
+                return job.action === event.target.id || job.action === event.target.parentElement.id;
+            }, this);
+            if (job) {
+                state.work.activate(job);
+            }
+        }
     });
     id('work-bar').style.transition = 'width 0s ease 0s';
 
-    id('fps').addEventListener('click', function() {
+    id('fps').addEventListener('click', function () {
         Object.values(items).map(function (item) {
             state.backpack.store(item);
         }, this);
     })
 })();
-
