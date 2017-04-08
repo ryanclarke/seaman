@@ -1,0 +1,10 @@
+#work-bar {
+    transition-duration: 0s;
+}
+
+#actions button {
+    background-position: left;
+    background-repeat: no-repeat;
+    background-size: 2em;
+    padding-left: 2em;
+}

@@ -60,7 +60,7 @@
     }
     var jobs = [
         {
-            action: 'daydream-action',
+            action: 'daydream',
             duration: 10000,
             title: 'Daydreaming',
             results: [
@@ -79,7 +79,7 @@
             }
         },
         {
-            action: 'dig-action',
+            action: 'dig',
             count: 0,
             specialCount: 0,
             title: 'Digging',
@@ -332,14 +332,13 @@
     id('actions').addEventListener('click', function (event) {
         if (event && event.target) {
             var job = jobs.find(function (job) {
-                return job.action === event.target.id || job.action === event.target.parentElement.id;
+                return job.action === event.target.dataset.action;
             }, this);
             if (job) {
                 state.work.activate(job);
             }
         }
     });
-    id('work-bar').style.transition = 'width 0s ease 0s';
 
     id('fps').addEventListener('click', function () {
         Object.values(items).map(function (item) {
