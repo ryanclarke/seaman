@@ -54,6 +54,11 @@
             svg: 'sombrero',
             value: 25
         },
+        tool: {
+            name: 'tool',
+            svg: 'spade',
+            value: 20
+        },
     };
     function rand(choices) {
         return choices[Math.floor(Math.random() * choices.length)];
@@ -75,7 +80,22 @@
             getResult: function () {
                 return {
                     msg: rand(this.results)
-                }
+                };
+            }
+        },
+        {
+            action: 'make',
+            count: 0,
+            available: false,
+            title: 'Making',
+            duration: 5000,
+            getResult: function () {
+                this.count += 1;
+                id('actions').querySelector('button:last-child').remove();
+                return {
+                    msg: 'Made a tool',
+                    item: items.tool
+                };
             }
         },
         {
@@ -88,8 +108,7 @@
                 {
                     weight: 50,
                     msg: 'Dug in the dirt',
-                    item: null,
-                    value: 0
+                    item: null
                 },
                 {
                     weight: 10,
@@ -306,7 +325,13 @@
         state.update(delta);
         var inventory = state.backpack.things;
         if (inventory.twig && inventory.string) {
-            // id('action').innerHTML += '<button id="dig-action" class="btn"><img src="svg/spade.svg" class="img-responsive"> Dig</button>'
+            var job = jobs.find(function(job){
+                return job.action === "make";
+            });
+            if (job && job.count < 1 && !job.available) {
+                job.available = true;
+                id('actions').innerHTML += '<button class="btn" data-action="make" style="background-image: url(svg/spade.svg)" type="button">Make</button>'
+            }
         }
     }
 
