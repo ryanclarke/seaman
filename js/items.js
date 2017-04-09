@@ -44,7 +44,7 @@
         },
         cowboyHat: {
             name: 'cowboy hat',
-            svg: 'top-hat',
+            svg: 'western-hat',
             value: 25
         },
         sombrero: {

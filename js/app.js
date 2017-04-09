@@ -5,100 +5,109 @@
     var events = [];
     var state = {
         lastActionTime: -99999,
-        log: {
-            dirty: false,
-            messages: [],
-            store: function (message) {
-                this.messages.unshift(message);
-                this.dirty = true;
-            },
-            draw: function () {
-                if (this.dirty) {
-                    this.dirty = false;
-                    $id('log').innerHTML = this.messages.map(function (result) {
-                        var text = result.item && result.item.value > 0 ? '<strong>' + result.msg + '</strong>' : result.msg;
-                        var status = result.item && result.item.value > 0 ? 'success' : 'muted';
-                        return '<li class="text-' + status + '">' + text + '</li>';
-                    }, this).join('\n');
-                }
-            }
-        },
-        backpack: {
-            dirty: false,
-            things: {},
-            store: function (thing) {
-                if (!this.things[thing.name]) {
-                    this.things[thing.name] = thing;
-                    thing.count = 0;
-                }
-                thing.count += 1;
-                this.dirty = true;
-            },
-            draw: function () {
-                if (this.dirty) {
-                    this.dirty = false;
-                    var tableRows = Object.values(this.things).map(function (thing) {
-                        return '<tr><td><img class="img-responsive" src="svg/' + thing.svg + '.svg"></td><td>' + thing.name + '</td><td>' + thing.count + '</td></tr>';
-                    }, this);
-                    if (tableRows.length > 0) {
-                        tableRows.unshift('<tr><th></th><th>Item</th><th>Amount</th><tr>');
-                    }
-                    $id('backpack').innerHTML = tableRows.join('\n');
-                }
-            }
-        },
-        work: {
-            left: 0,
-            job: null,
-            justFinished: false,
-            activate: function (newJob) {
-                if (!this.isInProgress()) {
-                    this.job = newJob;
-                    this.left = this.job.duration;
-                }
-            },
-            isInProgress: function () {
-                return this.left > 0;
-            },
-            update: function (delta) {
-                if (this.isInProgress()) {
-                    this.left -= delta;
-                    if (this.left < 0) {
-                        this.left = 0;
-                        this.justFinished = true;
+        log: (function () {
+            var dirty = false;
+            var messages = [];
+            return {
+                store: function (message) {
+                    messages.unshift(message);
+                    dirty = true;
+                },
+                draw: function () {
+                    if (dirty) {
+                        dirty = false;
+                        $id('log').innerHTML = messages.map(function (result) {
+                            var text = result.item && result.item.value > 0 ? '<strong>' + result.msg + '</strong>' : result.msg;
+                            var status = result.item && result.item.value > 0 ? 'success' : 'muted';
+                            return '<li class="text-' + status + '">' + text + '</li>';
+                        }, this).join('\n');
                     }
                 }
-            },
-            draw: function () {
-                $id('work').disabled = this.isInProgress();
-                if (this.isInProgress()) {
-                    var percent = 100 * this.left / this.job.duration;
-                    $id('work-label').textContent = this.job.title;
-                    $id('work-bar').style.width = percent + '%';
-                    if (percent > 90) {
-                        $id('work-time-in').textContent = Math.floor(this.left / 1000 + 1) + 's';
-                        $id('work-time-out').textContent = '';
-                    } else {
+            };
+        })(),
+        backpack: (function () {
+            var dirty = false;
+            var items = {};
+            return {
+                has: function (itemName) {
+                    return items[itemName];
+                },
+                store: function (item) {
+                    if (!items[item.name]) {
+                        items[item.name] = item;
+                        item.count = 0;
+                    }
+                    item.count += 1;
+                    dirty = true;
+                },
+                draw: function () {
+                    if (dirty) {
+                        dirty = false;
+                        var tableRows = Object.values(items).map(function (item) {
+                            return '<tr><td><img class="img-responsive" src="svg/' + item.svg + '.svg"></td><td>' + item.name + '</td><td>' + item.count + '</td></tr>';
+                        }, this);
+                        if (tableRows.length > 0) {
+                            tableRows.unshift('<tr><th></th><th>Item</th><th>Amount</th><tr>');
+                        }
+                        $id('backpack').innerHTML = tableRows.join('\n');
+                    }
+                }
+            };
+        })(),
+        work: (function () {
+            var left = 0;
+            var job = null;
+            var justFinished = false;
+            return {
+                activate: function (newJob) {
+                    if (!this.isInProgress()) {
+                        job = newJob;
+                        left = job.duration;
+                    }
+                },
+                isInProgress: function () {
+                    return left > 0;
+                },
+                update: function (delta) {
+                    if (this.isInProgress()) {
+                        left -= delta;
+                        if (left < 0) {
+                            left = 0;
+                            justFinished = true;
+                        }
+                    }
+                },
+                draw: function () {
+                    $id('work').disabled = this.isInProgress();
+                    if (this.isInProgress()) {
+                        var percent = 100 * left / job.duration;
+                        $id('work-label').textContent = job.title;
+                        $id('work-bar').style.width = percent + '%';
+                        if (percent > 90) {
+                            $id('work-time-in').textContent = Math.floor(left / 1000 + 1) + 's';
+                            $id('work-time-out').textContent = '';
+                        } else {
+                            $id('work-time-in').textContent = '';
+                            $id('work-time-out').textContent = Math.floor(left / 1000 + 1) + 's';
+                        }
+                    }
+                    if (justFinished) {
+                        justFinished = false;
+                        $id('work-label').textContent = 'Doing Nothing';
+                        $id('work-bar').style.width = '0%';
                         $id('work-time-in').textContent = '';
-                        $id('work-time-out').textContent = Math.floor(this.left / 1000 + 1) + 's';
-                    }
-                }
-                if (this.justFinished) {
-                    this.justFinished = false;
-                    $id('work-label').textContent = 'Doing Nothing';
-                    $id('work-bar').style.width = '0%';
-                    $id('work-time-in').textContent = '';
-                    $id('work-time-out').textContent = '';
+                        $id('work-time-out').textContent = '';
 
-                    var result = this.job.getResult();
-                    state.log.store(result);
-                    if (result.item) {
-                        state.backpack.store(result.item);
+                        var result = job.getResult();
+                        state.log.store(result);
+                        if (result.item) {
+                            state.backpack.store(result.item);
+                        }
+                        job = null;
                     }
-                    this.job = null;
                 }
-            }
-        },
+            };
+        })(),
         update: function (delta) {
             this.work.update(delta);
         },
@@ -134,8 +143,7 @@
 
     function update(delta) {
         state.update(delta);
-        var inventory = state.backpack.things;
-        if (inventory.twig && inventory.string) {
+        if (state.backpack.has('twig') && state.backpack.has('string')) {
             var job = APP.jobs.find('make');
             if (job && job.count < 1 && !job.available) {
                 job.available = true;
