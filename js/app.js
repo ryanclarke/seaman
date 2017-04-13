@@ -10,6 +10,13 @@
         work: APP.work,
         update: function (delta) {
             this.work.update(delta);
+            if (state.backpack.has('twig') && state.backpack.has('string')) {
+                var job = APP.jobs.find('make');
+                if (job && job.count < 1 && !job.available) {
+                    job.available = true;
+                    $id('actions').innerHTML += '<button class="btn" data-action="make" style="background-image: url(svg/spade.svg)" type="button">Make</button>';
+                }
+            }
         },
         draw: function () {
             this.work.draw(this.backpack, this.log);
@@ -43,13 +50,6 @@
 
     function update(delta) {
         state.update(delta);
-        if (state.backpack.has('twig') && state.backpack.has('string')) {
-            var job = APP.jobs.find('make');
-            if (job && job.count < 1 && !job.available) {
-                job.available = true;
-                $id('actions').innerHTML += '<button class="btn" data-action="make" style="background-image: url(svg/spade.svg)" type="button">Make</button>';
-            }
-        }
     }
 
     function draw() {

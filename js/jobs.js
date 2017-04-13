@@ -7,6 +7,7 @@
         {
             action: 'daydream',
             duration: 10000,
+            available: true,
             title: 'Daydreaming',
             results: [
                 'Saw a cloud that looked like a sheep',
@@ -42,6 +43,7 @@
             action: 'dig',
             count: 0,
             specialCount: 0,
+            available: true,
             title: 'Digging',
             duration: 2000,
             results: [
