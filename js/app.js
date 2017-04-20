@@ -1,5 +1,5 @@
 /* globals APP, MainLoop, $id */
-; (function () {
+(function () {
     'use strict';
 
     var events = [];

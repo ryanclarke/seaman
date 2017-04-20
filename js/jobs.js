@@ -1,5 +1,5 @@
 /* globals APP, $id, $rand */
-; (function (window) {
+(function (window) {
     'use strict';
 
     var items = APP.items;

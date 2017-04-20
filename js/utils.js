@@ -1,4 +1,4 @@
-;(function(window){
+(function(window){
     'use strict';
 
     window.$id = function(id) {

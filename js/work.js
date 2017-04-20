@@ -1,5 +1,5 @@
 /* globals $id */
-; (function (window) {
+(function (window) {
     'use strict';
 
     var work = (function () {
