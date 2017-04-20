@@ -13,7 +13,7 @@
                 draw: function () {
                     if (dirty) {
                         dirty = false;
-                        $id('log').innerHTML = messages.map(function (result) {
+                        $id('log').innerHTML = messages.slice(0, 16).map(function (result) {
                             var text = result.item && result.item.value > 0 ? '<strong>' + result.msg + '</strong>' : result.msg;
                             var status = result.item && result.item.value > 0 ? 'success' : 'muted';
                             return '<li class="text-' + status + '">' + text + '</li>';
