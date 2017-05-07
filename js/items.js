@@ -52,10 +52,10 @@
             svg: 'sombrero',
             value: 25
         },
-        tool: {
-            name: 'tool',
-            svg: 'spade',
-            value: 20
+        fishingPole: {
+            name: 'fishing pole',
+            svg: 'fishing-pole',
+            value: 50
         },
     };
 

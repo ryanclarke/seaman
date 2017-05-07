@@ -28,14 +28,14 @@
             action: 'make',
             count: 0,
             available: false,
-            title: 'Making',
+            title: 'Crafting a fishing pole',
             duration: 5000,
             getResult: function () {
                 this.count += 1;
                 $id('actions').querySelector('button:last-child').remove();
                 return {
-                    msg: 'Made a tool',
-                    item: items.tool
+                    msg: 'Created a really nice fishing pole',
+                    item: items.fishingPole
                 };
             }
         },
