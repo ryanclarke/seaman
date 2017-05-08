@@ -82,10 +82,21 @@
         if (event && event.target) {
             var job = APP.jobs.find(event.target.dataset.action);
             if (job) {
-                for (var i=0, l=job.cost.length; i<l; i+=1) {
-                    state.backpack.removeOne(APP.items[job.cost[i]]);
+                if (state.backpack.canAfford(job.costs)) {
+                    state.backpack.removeCosts(job.costs);
+                    state.work.activate(job);
+                } else {
+                    state.work.activate({
+                        duration: 1,
+                        getResult: function () {
+                            return {
+                                msg: job.costs.reduce(function (acc, cost) {
+                                    return acc + ' ' + cost.amount.toString() + ' ' + cost.name + ',';
+                                }, 'Requires').slice(0, -1)
+                            };
+                        }
+                    });
                 }
-                state.work.activate(job);
             }
         }
     });

@@ -9,7 +9,7 @@
             duration: 10000,
             available: true,
             title: 'Daydreaming',
-            cost: [],
+            costs: [],
             results: [
                 'Saw a cloud that looked like a sheep',
                 'Saw a cloud that like a wee little lamb',
@@ -36,9 +36,15 @@
                 'twig',
                 'string'
             ],
-            cost: [
-                'twig',
-                'string'
+            costs: [
+                {
+                    name: 'twig',
+                    amount: 1
+                },
+                {
+                    name: 'string',
+                    amount: 1
+                }
             ],
             html: '<button id="job-craft-fishing-pole" class="btn" data-action="craftFishingPole" style="background-image: url(svg/fishing-pole.svg)" type="button">Craft a fishing pole</button>',
             getResult: function () {
@@ -59,8 +65,11 @@
                 'fishing pole',
                 'worm'
             ],
-            cost: [
-                'worm'
+            costs: [
+                {
+                    name: 'worm',
+                    amount: 1
+                }
             ],
             html: '<button class="btn" data-action="goFish" style="background-image: url(svg/fishing.svg)" type="button">Go fishing</button>',
             getResult: function () {
@@ -77,7 +86,7 @@
             available: true,
             title: 'Digging',
             duration: 2000,
-            cost: [],
+            costs: [],
             html: '<button class="btn" data-action="dig" style="background-image: url(svg/spade.svg)" type="button">Dig</button>',
             results: [
                 {

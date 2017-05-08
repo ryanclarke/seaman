@@ -17,14 +17,23 @@
                     items[item.name].count += 1;
                     dirty = true;
                 },
-                removeOne: function (item) {
-                    if (items[item.name] && items[item.name].count > 0) {
-                        items[item.name].count -= 1;
-                        dirty = true;
-                    }
-                    if (items[item.name] && items[item.name].count === 0) {
-                        delete items[item.name];
-                        dirty = true;
+                canAfford: function (costs) {
+                    return costs.every(function(cost) {
+                        var item = items[cost.name];
+                        return item && item.count >= cost.amount;
+                    }, this);
+                },
+                removeCosts: function (costs) {
+                    for (var i=0, l=costs.length; i<l; i+=1) {
+                        var cost = costs[i];
+                        var item = items[cost.name];
+                        if (item) {
+                            item.count -= cost.amount;
+                            if (item.count <= 0) {
+                                delete items[item.name];
+                            }
+                            dirty = true;
+                        }
                     }
                 },
                 draw: function () {
