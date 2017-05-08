@@ -12,10 +12,20 @@
                 store: function (item) {
                     if (!items[item.name]) {
                         items[item.name] = item;
-                        item.count = 0;
+                        items[item.name].count = 0;
                     }
-                    item.count += 1;
+                    items[item.name].count += 1;
                     dirty = true;
+                },
+                removeOne: function (item) {
+                    if (items[item.name] && items[item.name].count > 0) {
+                        items[item.name].count -= 1;
+                        dirty = true;
+                    }
+                    if (items[item.name] && items[item.name].count === 0) {
+                        delete items[item.name];
+                        dirty = true;
+                    }
                 },
                 draw: function () {
                     if (dirty) {

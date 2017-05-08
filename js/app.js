@@ -11,10 +11,17 @@
         update: function (delta) {
             this.work.update(delta);
             if (state.backpack.has('twig') && state.backpack.has('string')) {
-                var job = APP.jobs.find('make');
-                if (job && job.count < 1 && !job.available) {
-                    job.available = true;
-                    $id('actions').innerHTML += '<button class="btn" data-action="make" style="background-image: url(svg/fishing-pole.svg)" type="button">Craft a fishing pole</button>';
+                var make = APP.jobs.find('craftFishingPole');
+                if (make && make.count < 1 && !make.available) {
+                    make.available = true;
+                    $id('actions').innerHTML += '<button id="job-craft-fishing-pole" class="btn" data-action="craftFishingPole" style="background-image: url(svg/fishing-pole.svg)" type="button">Craft a fishing pole</button>';
+                }
+            }
+            if (state.backpack.has('worm') && state.backpack.has('fishing pole')) {
+                var goFish = APP.jobs.find('goFish');
+                if (goFish && !goFish.available) {
+                    goFish.available = true;
+                    $id('actions').innerHTML += '<button class="btn" data-action="goFish" style="background-image: url(svg/fishing.svg)" type="button">Go fishing</button>';
                 }
             }
         },
@@ -75,6 +82,9 @@
         if (event && event.target) {
             var job = APP.jobs.find(event.target.dataset.action);
             if (job) {
+                for (var i=0, l=job.cost.length; i<l; i+=1) {
+                    state.backpack.removeOne(APP.items[job.cost[i]]);
+                }
                 state.work.activate(job);
             }
         }

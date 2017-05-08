@@ -9,6 +9,7 @@
             duration: 10000,
             available: true,
             title: 'Daydreaming',
+            cost: [],
             results: [
                 'Saw a cloud that looked like a sheep',
                 'Saw a cloud that like a wee little lamb',
@@ -18,6 +19,7 @@
                 'Pretended to see a real princess',
                 'Twirled around and around',
             ],
+            html: '<button class="btn" data-action="daydream" style="background-image: url(svg/sun-cloud.svg)" type="button">Daydream</button>',
             getResult: function () {
                 return {
                     msg: $rand(this.results)
@@ -25,17 +27,46 @@
             }
         },
         {
-            action: 'make',
+            action: 'craftFishingPole',
             count: 0,
             available: false,
             title: 'Crafting a fishing pole',
             duration: 5000,
+            requires: [
+                'twig',
+                'string'
+            ],
+            cost: [
+                'twig',
+                'string'
+            ],
+            html: '<button id="job-craft-fishing-pole" class="btn" data-action="craftFishingPole" style="background-image: url(svg/fishing-pole.svg)" type="button">Craft a fishing pole</button>',
             getResult: function () {
                 this.count += 1;
-                $id('actions').querySelector('button:last-child').remove();
+                $id('job-craft-fishing-pole').remove();
                 return {
                     msg: 'Created a really nice fishing pole',
                     item: items.fishingPole
+                };
+            }
+        },
+        {
+            action: 'goFish',
+            available: false,
+            title: 'Doing a bit of fishing',
+            duration: 10000,
+            requires: [
+                'fishing pole',
+                'worm'
+            ],
+            cost: [
+                'worm'
+            ],
+            html: '<button class="btn" data-action="goFish" style="background-image: url(svg/fishing.svg)" type="button">Go fishing</button>',
+            getResult: function () {
+                return {
+                    msg: 'Caught a nice fish',
+                    item: items.fish
                 };
             }
         },
@@ -46,6 +77,8 @@
             available: true,
             title: 'Digging',
             duration: 2000,
+            cost: [],
+            html: '<button class="btn" data-action="dig" style="background-image: url(svg/spade.svg)" type="button">Dig</button>',
             results: [
                 {
                     weight: 50,
@@ -134,7 +167,8 @@
     var obj = {
         find: function(title) {
             return jobs.find(finder(title));
-        }
+        },
+
     };
 
     // Export to window

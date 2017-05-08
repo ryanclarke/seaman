@@ -57,6 +57,11 @@
             svg: 'fishing-pole',
             value: 50
         },
+        fish: {
+            name: 'fish',
+            svg: 'salmon',
+            value: 10
+        },
     };
 
     // Export to window
