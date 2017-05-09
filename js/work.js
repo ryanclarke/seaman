@@ -16,7 +16,7 @@
             isInProgress: function () {
                 return left > 0;
             },
-            update: function (delta, backpack, log) {
+            update: function (delta, handler) {
                 if (this.isInProgress()) {
                     left -= delta;
                     if (left < 0) {
@@ -24,10 +24,7 @@
                         justFinished = true;
 
                         var result = job.getResult();
-                        log.store(result);
-                        if (result.item) {
-                            backpack.store(result.item);
-                        }
+                        handler(result);
                         job = null;
                     }
                 }

@@ -6,7 +6,12 @@
     var state = {
         lastActionTime: -99999,
         update: function (delta) {
-            APP.work.update(delta, APP.backpack, APP.log);
+            APP.work.update(delta, function (result) {
+                APP.log.store(result);
+                if (result.item) {
+                    APP.backpack.store(result.item);
+                }
+            });
             APP.actions.update(delta);
         },
         draw: function () {
