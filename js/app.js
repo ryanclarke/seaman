@@ -5,52 +5,37 @@
     var events = [];
     var state = {
         lastActionTime: -99999,
-        log: APP.log,
-        backpack: APP.backpack,
-        work: APP.work,
         update: function (delta) {
-            this.work.update(delta);
-            if (state.backpack.has('twig') && state.backpack.has('string')) {
-                var make = APP.jobs.find('craftFishingPole');
-                if (make && make.count < 1 && !make.available) {
-                    make.available = true;
-                    $id('actions').innerHTML += '<button id="job-craft-fishing-pole" class="btn" data-action="craftFishingPole" style="background-image: url(svg/fishing-pole.svg)" type="button">Craft a fishing pole</button>';
-                }
-            }
-            if (state.backpack.has('worm') && state.backpack.has('fishing pole')) {
-                var goFish = APP.jobs.find('goFish');
-                if (goFish && !goFish.available) {
-                    goFish.available = true;
-                    $id('actions').innerHTML += '<button class="btn" data-action="goFish" style="background-image: url(svg/fishing.svg)" type="button">Go fishing</button>';
-                }
-            }
+            APP.work.update(delta);
+            APP.actions.update(delta);
         },
         draw: function () {
-            this.work.draw(this.backpack, this.log);
-            this.backpack.draw();
-            this.log.draw();
+            APP.work.draw(APP.backpack, APP.log);
+            APP.backpack.draw();
+            APP.actions.draw();
+            APP.log.draw();
         },
     };
 
     var idleDelay = 5000;
     function begin(timestamp) {
-        if (state.work.isInProgress()) {
+        if (APP.work.isInProgress()) {
             state.lastActionTime = timestamp;
             events = [];
         }
         if (events.length === 0 && timestamp - state.lastActionTime > idleDelay) {
             idleDelay *= 2;
             state.lastActionTime = timestamp;
-            state.log.store({
+            APP.log.store({
                 msg: 'Doing nothing',
                 value: 0,
             });
         }
-        while (events.length > 0 && !state.work.isInProgress()) {
+        while (events.length > 0 && !APP.work.isInProgress()) {
             idleDelay = 10000;
             var event = events.shift();
             if (event) {
-                state.work.activate(APP.jobs.find(event));
+                APP.work.activate(APP.jobs.find(event));
             }
         }
     }
@@ -82,11 +67,11 @@
         if (event && event.target) {
             var job = APP.jobs.find(event.target.dataset.action);
             if (job) {
-                if (state.backpack.canAfford(job.costs)) {
-                    state.backpack.removeCosts(job.costs);
-                    state.work.activate(job);
+                if (APP.backpack.canAfford(job.costs)) {
+                    APP.backpack.removeCosts(job.costs);
+                    APP.work.activate(job);
                 } else {
-                    state.work.activate({
+                    APP.work.activate({
                         duration: 1,
                         getResult: function () {
                             return {
@@ -103,7 +88,7 @@
 
     $id('fps').addEventListener('click', function () {
         Object.values(APP.items).map(function (item) {
-            state.backpack.store(item);
+            APP.backpack.store(item);
         }, this);
     });
 })();

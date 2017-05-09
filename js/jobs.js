@@ -1,4 +1,4 @@
-/* globals APP, $id, $rand */
+/* globals APP, $rand */
 (function (window) {
     'use strict';
 
@@ -9,6 +9,7 @@
             duration: 10000,
             available: true,
             title: 'Daydreaming',
+            requires: [],
             costs: [],
             results: [
                 'Saw a cloud that looked like a sheep',
@@ -29,12 +30,19 @@
         {
             action: 'craftFishingPole',
             count: 0,
+            maxCount: 1,
             available: false,
             title: 'Crafting a fishing pole',
             duration: 5000,
             requires: [
-                'twig',
-                'string'
+                {
+                    name: 'twig',
+                    amount: 1
+                },
+                {
+                    name: 'string',
+                    amount: 1
+                }
             ],
             costs: [
                 {
@@ -49,7 +57,7 @@
             html: '<button id="job-craft-fishing-pole" class="btn" data-action="craftFishingPole" style="background-image: url(svg/fishing-pole.svg)" type="button">Craft a fishing pole</button>',
             getResult: function () {
                 this.count += 1;
-                $id('job-craft-fishing-pole').remove();
+                this.available = false;
                 return {
                     msg: 'Created a really nice fishing pole',
                     item: items.fishingPole
@@ -62,8 +70,14 @@
             title: 'Doing a bit of fishing',
             duration: 10000,
             requires: [
-                'fishing pole',
-                'worm'
+                {
+                    name: 'fishing pole',
+                    amount: 1
+                },
+                {
+                    name: 'worm',
+                    amount: 1
+                }
             ],
             costs: [
                 {
@@ -86,6 +100,7 @@
             available: true,
             title: 'Digging',
             duration: 2000,
+            requires: [],
             costs: [],
             html: '<button class="btn" data-action="dig" style="background-image: url(svg/spade.svg)" type="button">Dig</button>',
             results: [
@@ -177,7 +192,7 @@
         find: function(title) {
             return jobs.find(finder(title));
         },
-
+        list: jobs
     };
 
     // Export to window
