@@ -5,6 +5,94 @@
     var items = APP.items;
     var jobs = [
         {
+            action: 'dig',
+            count: 0,
+            specialCount: 0,
+            available: true,
+            title: 'Dig',
+            progressDescription: 'Digging',
+            image: 'spade',
+            duration: 2000,
+            requires: [],
+            costs: [],
+            results: [
+                {
+                    weight: 50,
+                    msg: 'Dug in the dirt',
+                    item: null
+                },
+                {
+                    weight: 10,
+                    msg: 'Dug up a brick',
+                    item: items.brick
+                },
+                {
+                    weight: 4,
+                    msg: 'Dug up an old hat',
+                    item: items.oldHat
+                },
+                {
+                    weight: 1,
+                    msg: 'Dug up an old pirate hat',
+                    item: items.pirateHat,
+                },
+                {
+                    weight: 1,
+                    msg: 'Dug up an old top hat',
+                    item: items.topHat,
+                },
+                {
+                    weight: 1,
+                    msg: 'Dug up an old cowboy hat',
+                    item: items.cowboyHat,
+                },
+                {
+                    weight: 1,
+                    msg: 'Dug up an old sombrero',
+                    item: items.sombrero,
+                },
+                {
+                    weight: 15,
+                    msg: 'Dug up a rock',
+                    item: items.rock
+                },
+                {
+                    weight: 10,
+                    msg: 'Dug up a piece of string',
+                    item: items.string
+                },
+                {
+                    weight: 10,
+                    msg: 'Dug up a twig',
+                    item: items.twig
+                },
+                {
+                    weight: 15,
+                    msg: 'Dug up a wiggly worm',
+                    item: items.worm
+                },
+            ],
+            pickRandomResult: function () {
+                var sumOfWeights = this.results.reduce(function (accumulator, result) {
+                    return accumulator + result.weight;
+                }, 0);
+                var roll = Math.floor(Math.random() * sumOfWeights);
+                var cumulativeWeight = 0;
+                return this.results.find(function (result) {
+                    cumulativeWeight += result.weight;
+                    return roll < cumulativeWeight;
+                });
+            },
+            getResult: function () {
+                this.count += 1;
+                if (this.count <= 2) {
+                    return this.results[0];
+                }
+
+                return this.pickRandomResult();
+            }
+        },
+        {
             action: 'daydream',
             duration: 10000,
             available: true,
@@ -94,94 +182,6 @@
                     msg: 'Caught a nice fish',
                     item: items.fish
                 };
-            }
-        },
-        {
-            action: 'dig',
-            count: 0,
-            specialCount: 0,
-            available: true,
-            title: 'Dig',
-            progressDescription: 'Digging',
-            image: 'spade',
-            duration: 2000,
-            requires: [],
-            costs: [],
-            results: [
-                {
-                    weight: 50,
-                    msg: 'Dug in the dirt',
-                    item: null
-                },
-                {
-                    weight: 10,
-                    msg: 'Dug up a brick',
-                    item: items.brick
-                },
-                {
-                    weight: 4,
-                    msg: 'Dug up an old hat',
-                    item: items.oldHat
-                },
-                {
-                    weight: 1,
-                    msg: 'Dug up an old pirate hat',
-                    item: items.pirateHat,
-                },
-                {
-                    weight: 1,
-                    msg: 'Dug up an old top hat',
-                    item: items.topHat,
-                },
-                {
-                    weight: 1,
-                    msg: 'Dug up an old cowboy hat',
-                    item: items.cowboyHat,
-                },
-                {
-                    weight: 1,
-                    msg: 'Dug up an old sombrero',
-                    item: items.sombrero,
-                },
-                {
-                    weight: 15,
-                    msg: 'Dug up a rock',
-                    item: items.rock
-                },
-                {
-                    weight: 10,
-                    msg: 'Dug up a piece of string',
-                    item: items.string
-                },
-                {
-                    weight: 10,
-                    msg: 'Dug up a twig',
-                    item: items.twig
-                },
-                {
-                    weight: 15,
-                    msg: 'Dug up a wiggly worm',
-                    item: items.worm
-                },
-            ],
-            pickRandomResult: function () {
-                var sumOfWeights = this.results.reduce(function (accumulator, result) {
-                    return accumulator + result.weight;
-                }, 0);
-                var roll = Math.floor(Math.random() * sumOfWeights);
-                var cumulativeWeight = 0;
-                return this.results.find(function (result) {
-                    cumulativeWeight += result.weight;
-                    return roll < cumulativeWeight;
-                });
-            },
-            getResult: function () {
-                this.count += 1;
-                if (this.count <= 2) {
-                    return this.results[0];
-                }
-
-                return this.pickRandomResult();
             }
         },
     ];
