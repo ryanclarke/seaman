@@ -8,7 +8,9 @@
             action: 'daydream',
             duration: 10000,
             available: true,
-            title: 'Daydreaming',
+            title: 'Daydream',
+            progressDescription: 'Daydreaming',
+            image: 'sun-cloud',
             requires: [],
             costs: [],
             results: [
@@ -20,7 +22,6 @@
                 'Pretended to see a real princess',
                 'Twirled around and around',
             ],
-            html: '<button class="btn" data-action="daydream" style="background-image: url(svg/sun-cloud.svg)" type="button">Daydream</button>',
             getResult: function () {
                 return {
                     msg: $rand(this.results)
@@ -32,7 +33,9 @@
             count: 0,
             maxCount: 1,
             available: false,
-            title: 'Crafting a fishing pole',
+            title: 'Craft a fishing pole',
+            progressDescription: 'Crafting a fishing pole',
+            image: 'fishing-pole',
             duration: 5000,
             requires: [
                 {
@@ -54,7 +57,6 @@
                     amount: 1
                 }
             ],
-            html: '<button id="job-craft-fishing-pole" class="btn" data-action="craftFishingPole" style="background-image: url(svg/fishing-pole.svg)" type="button">Craft a fishing pole</button>',
             getResult: function () {
                 this.count += 1;
                 this.available = false;
@@ -67,7 +69,9 @@
         {
             action: 'goFish',
             available: false,
-            title: 'Doing a bit of fishing',
+            title: 'Go fishing',
+            progressDescription: 'Doing a bit of fishing',
+            image: 'fishing',
             duration: 10000,
             requires: [
                 {
@@ -85,7 +89,6 @@
                     amount: 1
                 }
             ],
-            html: '<button class="btn" data-action="goFish" style="background-image: url(svg/fishing.svg)" type="button">Go fishing</button>',
             getResult: function () {
                 return {
                     msg: 'Caught a nice fish',
@@ -98,11 +101,12 @@
             count: 0,
             specialCount: 0,
             available: true,
-            title: 'Digging',
+            title: 'Dig',
+            progressDescription: 'Digging',
+            image: 'spade',
             duration: 2000,
             requires: [],
             costs: [],
-            html: '<button class="btn" data-action="dig" style="background-image: url(svg/spade.svg)" type="button">Dig</button>',
             results: [
                 {
                     weight: 50,

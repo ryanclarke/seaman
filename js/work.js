@@ -29,7 +29,7 @@
                     $id('work').disabled = this.isInProgress();
                     if (this.isInProgress()) {
                         var percent = 100 * left / job.duration;
-                        $id('work-label').textContent = job.title;
+                        $id('work-label').textContent = job.progressDescription;
                         $id('work-bar').style.width = percent + '%';
                         if (percent > 90) {
                             $id('work-time-in').textContent = Math.floor(left / 1000 + 1) + 's';

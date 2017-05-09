@@ -28,10 +28,14 @@
         if (actions.isDirty) {
             actions.isDirty = false;
             var buttons = '';
-            jobs.list.forEach(function(job){
-                buttons += job.available ? job.html : '';
+            jobs.list.forEach(function(job) {
+                if (job.available) {
+                    buttons += '<button class="btn" data-action="'+ job.action + '" style="background-image: url(svg/' + job.image + '.svg)" type="button">' + job.title + '</button>';
+                }
             }, this);
             $id('actions').innerHTML = buttons;
         }
     };
 }));
+
+
